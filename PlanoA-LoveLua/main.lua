@@ -21,21 +21,66 @@ function love.load()
   isPlyr = true
   aviso = ''
   mat = {
-    {'.','--','.','--','.'},
-    {'|','','|','','|'},
-    {'.','--','.','--','.'},
-    {'|','','|','','|'},
-    {'.','--','.','--','.'}
+    {'.','','.','','.'},
+    {'','X','','X',''},
+    {'.','','.','','.'},
+    {'','X','','X',''},
+    {'.','','.','','.'}
   }
 end
 --
 
 function love.mousepressed(x,y)
+  local posX, posY = math.floor(x/50), math.floor(y/50)
+  
+  if mat[posY][posX] ~= '' then
+    aviso = 'Jogada inválida, clicou em "'..mat[posY][posX]..'" ('..posX..','..posY..')'
+    return
+  else aviso = '' end
+  
   if (isPlyr) then
-    
+    mat[posY][posX] = 'Pl'
+  else
+    mat[posY][posX] = 'IA'    
+  end
+  
+  checkClick(posX,posY)
+  
+  isPlyr = not isPlyr  
+end
+--
+
+function checkClick(x,y)
+  -- Bordas do tabuleiro, checar um quadrado
+  if x == 1 or y == 1 or x == 5 or y == 5 then
+    -- Borda esquerda
+    if x == 1 then
+      if mat[y][2] ~= 'X' and mat[y][3] ~= '' and mat[y-1][2] ~= '' and mat[y+1][2] ~= '' then marcou(2,y) end
+      
+    -- Borda superior
+    elseif y == 1 then
+      if mat[2][x] ~= 'X' and mat[3][x] ~= '' and mat[2][x+1] ~= '' and mat[2][x-1] ~= '' then marcou(x,2) end
+      
+      -- Borda direita
+    elseif x == 5 then
+      if mat[y][4] ~= 'X' and mat[y][3] ~= '' and mat[y-1][4] ~= '' and mat[y+1][4] ~= '' then marcou(4,y) end
+      
+    -- Borda inferior
+    elseif y == 5 then
+      if mat[4][x] ~= 'X' and mat[3][x] ~= '' and mat[4][x+1] ~= '' and mat[4][x-1] ~= '' then marcou(x,4) end
+      
+    end
+  -- Interior do tabuleiro, checar dois quadrados
   else
   
   end
+end
+--
+
+function marcou(x,y)
+  if isPlyr then mat[y][x] = 'Jg'
+  else mat[y][x] = 'IA' end
+  isPlyr = not isPlyr
 end
 --
 
@@ -46,7 +91,7 @@ end
 
 function love.draw()
   -- Legenda ao lado
-  LG.print('Jg = Jogador\nIA = Computador',350,50)
+  LG.print('Pl = Jogador\nIA = Computador',350,50)
   
   -- Tabuleiro do jogo
   for i = 1,5 do
