@@ -46,13 +46,7 @@ function love.load()
   -- Iniciar o jogo com a jogada da máquina
   -- Inicialmente, tirar uma posição random
   local aux = table.remove(disponiveis, math.random(1,12))
-  print(aux)
-  aux = aux*2
-  print(aux%6, math.floor(aux/6))
-  local x,y = 55+50*(aux%6), 55+50*math.floor(aux/6)
-  love.mousepressed(x,y)
-  print(x,y)
-  table.insert(arvore, Node.new(isPlyr, disponiveis))
+  jogadaPC(aux)
 end
 --
 
@@ -61,8 +55,7 @@ function love.mousepressed(x,y)
   local posX, posY = math.floor(x/50), math.floor(y/50)
   
   -- Verificação de jogadas erradas
-  if ((x<50 or x>300) or (y<50 or y>300)) then return end
-  if mat[posY][posX] ~= '' then return end
+  if ((x<50 or x>300) or (y<50 or y>300)) or mat[posY][posX] ~= '' then return end
   
   if (isPlyr) then
     mat[posY][posX] = 'Pl'
@@ -71,6 +64,8 @@ function love.mousepressed(x,y)
   end
   
   checkClick(posX,posY)
+  
+  table.insert(arvore, Node.new(isPlyr, disponiveis))
   
   isPlyr = not isPlyr  
 end
@@ -122,6 +117,13 @@ function checkClick(x,y)
       end
     end
   end
+end
+--
+
+function jogadaPC(pos)
+  pos = (pos*2)-1
+  local x,y = 55+50*(pos%5), 55+50*math.floor(pos/5)
+  love.mousepressed(x,y)
 end
 --
 
