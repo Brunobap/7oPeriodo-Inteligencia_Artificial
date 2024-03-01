@@ -16,6 +16,9 @@ local arvore
 -- Flag da vez do jogador
 local isPlyr
 
+-- Número de jogadas (para acompanhar o nível da árvore)
+local jogadas
+
 function love.load()
   -- Seed de randoms  
   math.randomseed(os.time())
@@ -29,11 +32,11 @@ function love.load()
   isPlyr = false
   
   disponiveis = {}
-  arvore = {}
   for i = 1,12 do 
     table.insert(disponiveis, i)
-  end
+  end  
   
+  arvore = Arvore.new()
   
   mat = {
     {'.','','.','','.'},
@@ -42,6 +45,9 @@ function love.load()
     {'','X','','X',''},
     {'.','','.','','.'}
   }
+  --
+  
+  jogadas = 0
   
   -- Iniciar o jogo com a jogada da máquina
   -- Inicialmente, tirar uma posição random
@@ -49,7 +55,6 @@ function love.load()
   jogadaPC(aux)
 end
 --
-
 function love.mousepressed(x,y)
   -- Posições em blocos de 50
   local posX, posY = math.floor(x/50), math.floor(y/50)
@@ -57,20 +62,14 @@ function love.mousepressed(x,y)
   -- Verificação de jogadas erradas
   if ((x<50 or x>300) or (y<50 or y>300)) or mat[posY][posX] ~= '' then return end
   
-  if (isPlyr) then
-    mat[posY][posX] = 'Pl'
-  else
-    mat[posY][posX] = 'IA'    
-  end
+  if (isPlyr) then mat[posY][posX] = 'Pl'
+  else mat[posY][posX] = 'IA' end
   
   checkClick(posX,posY)
-  
-  table.insert(arvore, Node.new(isPlyr, disponiveis))
   
   isPlyr = not isPlyr  
 end
 --
-
 function checkClick(x,y)
   -- Bordas do tabuleiro, checar um quadrado
   if x == 1 or y == 1 or x == 5 or y == 5 then
@@ -119,26 +118,22 @@ function checkClick(x,y)
   end
 end
 --
-
 function jogadaPC(pos)
   pos = (pos*2)-1
-  local x,y = 55+50*(pos%5), 55+50*math.floor(pos/5)
+  local x,y = 75+50*(pos%5), 75+50*math.floor(pos/5)
   love.mousepressed(x,y)
 end
 --
-
 function marcou(x,y)
   if isPlyr then mat[y][x] = 'Pl'
   else mat[y][x] = 'IA' end
   isPlyr = not isPlyr
 end
 --
-
 function love.keypressed(k)
   if k == 'escape' then love.event.quit() end
 end
 --
-
 function love.draw()
   -- Legenda ao lado
   LG.print('Pl = Jogador\nIA = Computador',350,50)
