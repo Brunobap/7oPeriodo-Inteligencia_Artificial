@@ -1,25 +1,40 @@
 
+require('objetos')
+
 -- Apelidos
 local LG = love.graphics
 
 -- Matriz principal
 local mat
 
+-- Vetor de disponíveis
+local disponiveis
+
+-- Árvore de possibilidades
+local arvore
+
 -- Flag da vez do jogador
 local isPlyr
 
--- Aviso de jogada errada
-local aviso
-
 function love.load()
+  -- Seed de randoms  
+  math.randomseed(os.time())
+  
   -- Setando a parte gráfica da tela
   LG.setBackgroundColor(1,1,1,1)
   LG.setColor(0,0,0,1)
   LG.setNewFont(40)
   
   -- Iniciando as variáveis
-  isPlyr = true
-  aviso = ''
+  isPlyr = false
+  
+  disponiveis = {}
+  arvore = {}
+  for i = 1,12 do 
+    table.insert(disponiveis, i)
+  end
+  
+  
   mat = {
     {'.','','.','','.'},
     {'','X','','X',''},
@@ -27,6 +42,17 @@ function love.load()
     {'','X','','X',''},
     {'.','','.','','.'}
   }
+  
+  -- Iniciar o jogo com a jogada da máquina
+  -- Inicialmente, tirar uma posição random
+  local aux = table.remove(disponiveis, math.random(1,12))
+  print(aux)
+  aux = aux*2
+  print(aux%6, math.floor(aux/6))
+  local x,y = 55+50*(aux%6), 55+50*math.floor(aux/6)
+  love.mousepressed(x,y)
+  print(x,y)
+  table.insert(arvore, Node.new(isPlyr, disponiveis))
 end
 --
 
@@ -122,7 +148,4 @@ function love.draw()
       LG.print(mat[i][j],50*j,50*i)
     end
   end
-  --
-  -- Aviso (caso haja um clique errado)
-  LG.print(aviso, 50, 350)
 end
