@@ -38,11 +38,11 @@ function love.load()
   
   
   mat = {
-    {'.','','.','','.'},
-    {'','X','','X',''},
-    {'.','','.','','.'},
-    {'','X','','X',''},
-    {'.','','.','','.'}
+    '.','','.','','.',
+    '','X','','X','',
+    '.','','.','','.',
+    '','X','','X','',
+    '.','','.','','.'
   }
 
   -- Iniciar o jogo com a jogada da máquina
@@ -53,7 +53,7 @@ function love.load()
   local aux2 = table.remove(disponiveis, math.random(1,11))
   jogadaPC(aux2)
   
-  arvore = Arvore.new(aux1, aux2)
+  --arvore = Arvore.new(aux1, aux2)
   
   -- Começa o jogo
   jogadas = 2
@@ -63,20 +63,22 @@ function love.mousepressed(x,y)
   -- Posições em blocos de 50
   local posX, posY = math.floor(x/50), math.floor(y/50)
   
+  local posAbs = (posX + 5*(posY+1))-10
+  
   -- Verificação de jogadas erradas
-  if ((x<50 or x>300) or (y<50 or y>300)) or mat[posY][posX] ~= '' then return end
+  if ((x<50 or x>300) or (y<50 or y>300)) or mat[posAbs] ~= '' then return end  
   
-  if (isPlyr) then mat[posY][posX] = 'Pl'
-  else mat[posY][posX] = 'IA' end
+  if (isPlyr) then mat[posAbs] = 'PL'
+  else mat[posAbs] = 'IA' end
   
-  checkClick(posX,posY)
+  --checkClick(posAbs)
   
   isPlyr = not isPlyr  
 end
 --
-function checkClick(x,y)
+function checkClick(pos)
   -- Bordas do tabuleiro, checar um quadrado
-  if x == 1 or y == 1 or x == 5 or y == 5 then
+  if pos == 6 or y == 1 or x == 5 or y == 5 then
     -- Borda esquerda
     if x == 1 then
       if mat[y][2] == 'X' and mat[y][3] ~= '' and mat[y-1][2] ~= '' and mat[y+1][2] ~= '' then marcou(2,y) end
@@ -140,13 +142,13 @@ end
 --
 function love.draw()
   -- Legenda ao lado
-  LG.print('Pl = Jogador\nIA = Computador',350,50)
+  LG.print('PL = Jogador\nIA = Computador',350,50)
   
   -- Tabuleiro do jogo
-  for i = 1,5 do
-    for j = 1,5 do
-      LG.rectangle('line',50*j,50*i,50,50)
-      LG.print(mat[i][j],50*j,50*i)
-    end
+  local x,y
+  for i,char in ipairs(mat) do
+    x,y = 50+50*((i-1)%5), 50+50*math.floor((i-1)/5)
+    LG.rectangle('line',x,y,50,50)
+    LG.print(char,x,y)
   end
 end
