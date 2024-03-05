@@ -1,5 +1,5 @@
 
-local contagem
+--local contagem
 
 Node = {}
 Node.new = function(isPlyr, disponiveis)
@@ -15,32 +15,48 @@ Node.new = function(isPlyr, disponiveis)
     for j,disp1 in ipairs(disponiveis) do 
       if disp1 ~= disp then table.insert(auxTable, disp1) end
     end
-    table.remove(auxTable, i)
-    novo = Node.new(isPlyr, auxTable)
+    
+    --print(table.maxn(disponiveis))
+    
+    -- To do: checar de quem é a próxima jogada
+    novo = Node.new(not isPlyr, auxTable)
     table.insert(self.filhos, novo)
-    contagem = contagem +1
-    print(contagem)
   end
   --
+--  if table.maxn(self.disponiveis) == 0 then
+--    contagem = contagem +1
+--    if contagem % 1e3 == 0 then print(contagem) end
+--  end
   
   return self
 end
 --
 
 Arvore = {}
-Arvore.new = function()
+Arvore.new = function(usado1, usado2)
   local self = self or {}
   
-  contagem = 0
+  --contagem = 0
+  
+  local disponiveis = {}
+  for i = 1,12 do 
+    if i ~= usado1 then table.insert(disponiveis, i) end
+  end  
+  table.insert(self, {isPlyr = true, disponiveis = disponiveis, filhos = {}})
+  
+  for a,i in ipairs(disponiveis) do 
+    if i == usado2 then table.remove(disponiveis, i) break end
+  end  
+  table.insert(self[1].filhos, {isPlyr = false, disponiveis = disponiveis, filhos = {}})
   
   local possibilidades, novo
-  for i = 1,12 do 
+  for i,disp in ipairs(disponiveis) do 
     possibilidades = {}
     for j = 1,12 do
-      if i ~= j then table.insert(possibilidades, j) end
+      if disp ~= j then table.insert(possibilidades, j) end
     end
-    novo = Node.new(true, possibilidades)
-    table.insert(self, novo)
+    novo = Node.new(false, possibilidades)
+    table.insert(self[1].filhos[1].filhos, novo)
   end
   --
   

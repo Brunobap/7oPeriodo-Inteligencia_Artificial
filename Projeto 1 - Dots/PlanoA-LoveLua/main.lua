@@ -36,7 +36,6 @@ function love.load()
     table.insert(disponiveis, i)
   end  
   
-  arvore = Arvore.new()
   
   mat = {
     {'.','','.','','.'},
@@ -45,14 +44,19 @@ function love.load()
     {'','X','','X',''},
     {'.','','.','','.'}
   }
-  --
-  
-  jogadas = 0
-  
+
   -- Iniciar o jogo com a jogada da máquina
   -- Inicialmente, tirar uma posição random
-  local aux = table.remove(disponiveis, math.random(1,12))
-  jogadaPC(aux)
+  local aux1 = table.remove(disponiveis, math.random(1,12))
+  jogadaPC(aux1)
+  
+  local aux2 = table.remove(disponiveis, math.random(1,11))
+  jogadaPC(aux2)
+  
+  arvore = Arvore.new(aux1, aux2)
+  
+  -- Começa o jogo
+  jogadas = 2
 end
 --
 function love.mousepressed(x,y)
