@@ -29,7 +29,7 @@ Node.new = function(isPlyr, disponiveis)
   --
   if table.maxn(self.disponiveis) == 0 then
     contagem = contagem +1
-    if contagem % 1e3 == 0 then print(contagem) end
+    if contagem % 1e4 == 0 then print(contagem) end
   end
   
   return self

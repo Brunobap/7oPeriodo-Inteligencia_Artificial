@@ -34,9 +34,9 @@ function love.load()
   disponiveis = {}
   for i = 1,12 do 
     table.insert(disponiveis, i)
-  end  
+  end    
   
-  
+  -- Vetor para a representação na tela
   mat = {
     '.','','.','','.',
     '','X','','X','',
@@ -53,7 +53,7 @@ function love.load()
   local aux2 = table.remove(disponiveis, math.random(1,11))
   jogadaPC(aux2)
   
-  --arvore = Arvore.new(aux1, aux2)
+  arvore = Arvore.new(aux1, aux2)
   
   -- Começa o jogo
   jogadas = 2
@@ -71,54 +71,55 @@ function love.mousepressed(x,y)
   if (isPlyr) then mat[posAbs] = 'PL'
   else mat[posAbs] = 'IA' end
   
-  --checkClick(posAbs)
+  checkClick(posX,posY,posAbs)
   
   isPlyr = not isPlyr  
 end
 --
-function checkClick(pos)
+function checkClick(x,y,abs)
   -- Bordas do tabuleiro, checar um quadrado
-  if pos == 6 or y == 1 or x == 5 or y == 5 then
+  if x == 1 or y == 1 or x == 5 or y == 5 then
     -- Borda esquerda
     if x == 1 then
-      if mat[y][2] == 'X' and mat[y][3] ~= '' and mat[y-1][2] ~= '' and mat[y+1][2] ~= '' then marcou(2,y) end
+      if mat[abs+1] == 'X' and (mat[abs-4] ~= '' and mat[abs+6] ~= '' and mat[abs+2] ~= '') then marcou(abs+1) end
       
     -- Borda superior
   elseif y == 1 then
-      if mat[2][x] == 'X' and mat[3][x] ~= '' and mat[2][x+1] ~= '' and mat[2][x-1] ~= '' then marcou(x,2) end
+      if mat[abs+5] == 'X' and (mat[abs+4] ~= '' and mat[abs+10] ~= '' and mat[abs+6] ~= '') then marcou(abs+5) end
       
       -- Borda direita
     elseif x == 5 then
-      if mat[y][4] == 'X' and mat[y][3] ~= '' and mat[y-1][4] ~= '' and mat[y+1][4] ~= '' then marcou(4,y) end
+      if mat[abs-1] == 'X' and (mat[abs-6] ~= '' and mat[abs+5] ~= '' and mat[abs-2] ~= '') then marcou(abs-1) end
       
     -- Borda inferior
     else
-      if mat[4][x] == 'X' and mat[3][x] ~= '' and mat[4][x+1] ~= '' and mat[4][x-1] ~= '' then marcou(x,4) end
+      if mat[abs-5] == 'X' and (mat[abs-6] ~= '' and mat[abs-4] ~= '' and mat[abs-10] ~= '') then marcou(abs-5) end
       
     end
   -- Interior do tabuleiro, checar dois quadrados
   else
-    local temp = isPlyr
+    local flag = false
     -- Linha vertical do meio
     if x == 3 then
-      if mat[y][2] == 'X' and mat[y][1] ~= '' and mat[y-1][2] ~= '' and mat[y+1][2] ~= '' then 
-        marcou(2,y)
+      if mat[abs-1] == 'X' and mat[abs-6] ~= '' and mat[abs+4] ~= '' and mat[abs-2] ~= '' then 
+        marcou(abs-1)
         isPlyr = not isPlyr
+        flag = true
       end
-      if mat[y][4] == 'X' and mat[y][5] ~= '' and mat[y-1][4] ~= '' and mat[y+1][4] ~= '' then
-        marcou(4,y)
-        isPlyr = not isPlyr
+      if mat[abs+1] == 'X' and mat[abs+4] ~= '' and mat[abs+6] ~= '' and mat[abs+2] ~= '' then
+        if flag then isPlyr = not temp end
+        marcou(abs+1)
       end
       
     -- Linha horizontal do meio
     else
-      if mat[2][x] == 'X' and mat[1][x] ~= '' and mat[2][x-1] ~= '' and mat[2][x+1] ~= '' then 
-        marcou(x,2)
-        isPlyr = not isPlyr
+      if mat[abs-5] == 'X' and mat[abs-10] ~= '' and mat[abs-4] ~= '' and mat[abs-6] ~= '' then 
+        marcou(abs-5)
+        isPlyr = not temp
       end
-      if mat[4][x] == 'X' and mat[5][x] ~= '' and mat[4][x-1] ~= '' and mat[4][x+1] ~= '' then
-        marcou(x,4)
-        isPlyr = not isPlyr
+      if mat[abs+5] == 'X' and mat[abs+10] ~= '' and mat[abs+4] ~= '' and mat[abs+6] ~= '' then
+        marcou(abs+5)
+        isPlyr = not temp
       end
     end
   end
@@ -130,9 +131,9 @@ function jogadaPC(pos)
   love.mousepressed(x,y)
 end
 --
-function marcou(x,y)
-  if isPlyr then mat[y][x] = 'Pl'
-  else mat[y][x] = 'IA' end
+function marcou(pos)
+  if isPlyr then mat[pos] = 'PL'
+  else mat[pos] = 'IA' end
   isPlyr = not isPlyr
 end
 --
