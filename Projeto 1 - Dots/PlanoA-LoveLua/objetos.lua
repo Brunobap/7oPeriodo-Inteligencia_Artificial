@@ -2,11 +2,20 @@
 local contagem
 
 Node = {}
-Node.new = function(isPlyr, disponiveis)
+Node.new = function(isPlyr, disponiveis, tabuleiro, usado)
   local self = self or {}
   
   self.isPlyr = not isPlyr
   self.disponiveis = disponiveis
+  self.tabuleiro = tabuleiro
+  
+  usado = (usado*2)-1
+  if (isPlyr) then self.tabuleiro[usado] = 'PL'
+  else self.tabuleiro[usado] = 'IA' end
+  local x,y = (usado%5), math.floor(usado/5)
+  checkClick(self.tabuleiro,x,y,usado)
+  
+  self.minmax = nil -- ???
   
   self.filhos = {}
   local novo, auxTable
@@ -19,8 +28,6 @@ Node.new = function(isPlyr, disponiveis)
       if disp1 ~= disp then table.insert(auxTable, disp1) end
     end
     
-    --print(table.maxn(disponiveis))
-    
     -- Montar o nó com as possibilidades daquela jogada
     -- To do: checar de quem é a próxima jogada
     novo = Node.new(isPlyr, auxTable)
@@ -28,16 +35,14 @@ Node.new = function(isPlyr, disponiveis)
   end
   --
   if table.maxn(self.disponiveis) == 0 then
-    contagem = contagem +1
-    if contagem % 1e4 == 0 then print(contagem) end
+    
   end
   
   return self
 end
 --
-
 Arvore = {}
-Arvore.new = function(usado1, usado2)
+Arvore.new = function(usado1, usado2, tabuleiro)
   local self = self or {}
   
   contagem = 0
@@ -46,12 +51,15 @@ Arvore.new = function(usado1, usado2)
   for i = 1,12 do 
     if i ~= usado1 then table.insert(disponiveis, i) end
   end  
-  table.insert(self, {isPlyr = true, disponiveis = disponiveis, filhos = {}})
+  tabuleiro[usado1*2] = 'IA'
+  table.insert(self, {isPlyr = false, disponiveis = disponiveis, filhos = {}, tabuleiro = tabuleiro})
+  
   
   for a,i in ipairs(disponiveis) do 
     if i == usado2 then table.remove(disponiveis, i) break end
   end  
-  table.insert(self[1].filhos, {isPlyr = false, disponiveis = disponiveis, filhos = {}})
+  tabuleiro[usado2*2] = 'PL'
+  table.insert(self[1].filhos, {isPlyr = true, disponiveis = disponiveis, filhos = {}, tabuleiro = tabuleiro})
   
   local possibilidades, novo
   for i,disp in ipairs(disponiveis) do 
@@ -59,7 +67,7 @@ Arvore.new = function(usado1, usado2)
     for j,pos in ipairs(disponiveis) do
       if disp ~= pos then table.insert(possibilidades, pos) end
     end
-    novo = Node.new(false, possibilidades)
+    novo = Node.new(false, possibilidades, tabuleiro)
     table.insert(self[1].filhos[1].filhos, novo)
   end
   --

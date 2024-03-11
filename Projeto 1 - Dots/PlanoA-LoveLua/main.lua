@@ -1,5 +1,6 @@
 
 require('objetos')
+require('utilitarias')
 
 -- Apelidos
 local LG = love.graphics
@@ -45,15 +46,14 @@ function love.load()
     '.','','.','','.'
   }
 
-  -- Iniciar o jogo com a jogada da máquina
-  -- Inicialmente, tirar uma posição random
+  -- Iniciar com jogadas random
   local aux1 = table.remove(disponiveis, math.random(1,12))
   jogadaPC(aux1)
   
   local aux2 = table.remove(disponiveis, math.random(1,11))
   jogadaPC(aux2)
   
-  arvore = Arvore.new(aux1, aux2)
+  --arvore = Arvore.new(aux1, aux2)
   
   -- Começa o jogo
   jogadas = 2
@@ -71,74 +71,12 @@ function love.mousepressed(x,y)
   if (isPlyr) then mat[posAbs] = 'PL'
   else mat[posAbs] = 'IA' end
   
-  checkClick(posX,posY,posAbs)
-  
-  isPlyr = not isPlyr  
-end
---
-function checkClick(x,y,abs)
-  -- Bordas do tabuleiro, checar um quadrado
-  if x == 1 or y == 1 or x == 5 or y == 5 then
-    -- Borda esquerda
-    if x == 1 then
-      if mat[abs+1] == 'X' and (mat[abs-4] ~= '' and mat[abs+6] ~= '' and mat[abs+2] ~= '') then marcou(abs+1) end
-      
-    -- Borda superior
-  elseif y == 1 then
-      if mat[abs+5] == 'X' and (mat[abs+4] ~= '' and mat[abs+10] ~= '' and mat[abs+6] ~= '') then marcou(abs+5) end
-      
-      -- Borda direita
-    elseif x == 5 then
-      if mat[abs-1] == 'X' and (mat[abs-6] ~= '' and mat[abs+5] ~= '' and mat[abs-2] ~= '') then marcou(abs-1) end
-      
-    -- Borda inferior
-    else
-      if mat[abs-5] == 'X' and (mat[abs-6] ~= '' and mat[abs-4] ~= '' and mat[abs-10] ~= '') then marcou(abs-5) end
-      
-    end
-  -- Interior do tabuleiro, checar dois quadrados
-  else
-    local flag = false
-    -- Linha vertical do meio
-    if x == 3 then
-      if mat[abs-1] == 'X' and mat[abs-6] ~= '' and mat[abs+4] ~= '' and mat[abs-2] ~= '' then 
-        marcou(abs-1)
-        isPlyr = not isPlyr
-        flag = true
-      end
-      if mat[abs+1] == 'X' and mat[abs+4] ~= '' and mat[abs+6] ~= '' and mat[abs+2] ~= '' then
-        if flag then isPlyr = not temp end
-        marcou(abs+1)
-      end
-      
-    -- Linha horizontal do meio
-    else
-      if mat[abs-5] == 'X' and mat[abs-10] ~= '' and mat[abs-4] ~= '' and mat[abs-6] ~= '' then 
-        marcou(abs-5)
-        isPlyr = not temp
-      end
-      if mat[abs+5] == 'X' and mat[abs+10] ~= '' and mat[abs+4] ~= '' and mat[abs+6] ~= '' then
-        marcou(abs+5)
-        isPlyr = not temp
-      end
-    end
-  end
-end
---
-function jogadaPC(pos)
-  pos = (pos*2)-1
-  local x,y = 75+50*(pos%5), 75+50*math.floor(pos/5)
-  love.mousepressed(x,y)
-end
---
-function marcou(pos)
-  if isPlyr then mat[pos] = 'PL'
-  else mat[pos] = 'IA' end
-  isPlyr = not isPlyr
+  isPlyr = checkClick(isPlyr,mat,posX,posY,posAbs)
 end
 --
 function love.keypressed(k)
-  if k == 'escape' then love.event.quit() end
+  if k == 'r' then love.load()
+  else love.event.quit() end
 end
 --
 function love.draw()
