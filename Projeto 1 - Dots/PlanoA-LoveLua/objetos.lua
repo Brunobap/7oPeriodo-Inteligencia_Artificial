@@ -11,13 +11,13 @@ Node.new = function(isPlyr, disponiveis, tabuleiro, usado)
   tabuleiro[usado] = "#"
   self.tabuleiro = tabuleiro
 
-  local x,y = (usado%5), math.floor(usado/5)+1
   self.isPlyr = isPlyr
+  local x,y = (usado%5), math.floor(usado/5)+1  
+  print(usado,x,y)
   local finalState = checkClick(isPlyr, self.tabuleiro, x,y, usado)
   
   self.minmax = 0
-  
-  self.filhos = {}  
+  self.filhos = {}
   
   -- Se o nó já é um final da raíz, calcular o minmax
   if #self.disponiveis == 0 then
@@ -49,13 +49,24 @@ Node.new = function(isPlyr, disponiveis, tabuleiro, usado)
 end
 --
 Arvore = {}
-Arvore.new = function(usado1, usado2, tabuleiro)
+Arvore.new = function(usado1, usado2)
   local self = self or {}
   
+  local tabuleiro = {
+    '.',  '',   '.',  '',   '.',
+    
+    '',   'X',  '',   'X',  '',
+    
+    '.',  '',   '.',  '',   '.',
+    
+    '',   'X',  '',   'X',  '',
+    
+    '.',  '',   '.',  '',   '.'
+  }
+  
   local disponiveis = {}
-  for i = 1,12 do 
-    if i ~= usado1 then table.insert(disponiveis, i) end
-  end  
+  for i = 1,12 do if i ~= usado1 then table.insert(disponiveis, i) end end
+  
   tabuleiro[usado1*2] = 'IA'
   table.insert(self, {isPlyr = false, disponiveis = table.clone(disponiveis), filhos = {}, tabuleiro = table.clone(tabuleiro)})
   
@@ -71,11 +82,10 @@ Arvore.new = function(usado1, usado2, tabuleiro)
     for j,pos in ipairs(disponiveis) do
       if disp ~= pos then table.insert(possibilidades, pos) end
     end
-    novo = Node.new(false, possibilidades, table.clone(tabuleiro), disp)
+    novo = Node.new(false, table.clone(possibilidades), table.clone(tabuleiro), disp)
     table.insert(self[1].filhos[1].filhos, novo)
   end
   --
   
   return self
 end
---

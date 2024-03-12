@@ -1,6 +1,5 @@
 
 function checkClick(isPlyr,mat,x,y,abs)
---  print(x,y,abs)
   -- Bordas do tabuleiro, checar um quadrado
   if x == 1 or y == 1 or x == 5 or y == 5 then
     -- Borda esquerda
@@ -8,22 +7,19 @@ function checkClick(isPlyr,mat,x,y,abs)
       if mat[abs+1] == 'X' and (mat[abs-4] ~= '' and mat[abs+6] ~= '' and mat[abs+2] ~= '') then
         marcou(isPlyr,mat,abs+1)
         return isPlyr
-      end
-      
+      end      
     -- Borda superior
     elseif y == 1 then
       if mat[abs+5] == 'X' and (mat[abs+4] ~= '' and mat[abs+10] ~= '' and mat[abs+6] ~= '') then
         marcou(isPlyr,mat,abs+5)
         return isPlyr
-      end
-      
+      end      
       -- Borda direita
     elseif x == 5 then
       if mat[abs-1] == 'X' and (mat[abs-6] ~= '' and mat[abs+4] ~= '' and mat[abs-2] ~= '') then
         marcou(isPlyr,mat,abs-1)
         return isPlyr
-      end
-      
+      end      
     -- Borda inferior
     else
       if mat[abs-5] == 'X' and (mat[abs-6] ~= '' and mat[abs-4] ~= '' and mat[abs-10] ~= '') then
@@ -62,9 +58,7 @@ function checkClick(isPlyr,mat,x,y,abs)
 end
 --
 function marcou(isPlyr,mat,pos)
---  print(pos)
-  if isPlyr then mat[pos] = 'PL'
-  else mat[pos] = 'IA' end
+  if isPlyr then mat[pos] = 'PL' else mat[pos] = 'IA' end
 end
 --
 function jogadaPC(pos)

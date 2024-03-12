@@ -47,7 +47,7 @@ function love.load()
     
     '.',  '',   '.',  '',   '.'
   }
-
+ 
   -- Iniciar com jogadas random
   local aux1 = table.remove(disponiveis, math.random(1,12))
   jogadaPC(aux1)
@@ -55,20 +55,20 @@ function love.load()
   local aux2 = table.remove(disponiveis, math.random(1,11))
   jogadaPC(aux2)
   
-  arvore = Arvore.new(aux1, aux2, table.clone(mat))
+  arvore = Arvore.new(aux1, aux2)
 end
 --
 function love.mousepressed(x,y)
   -- Posições em blocos de 50
   local posX, posY = math.floor(x/50), math.floor(y/50)
   
+  -- Posição no vetor de 25 posições
   local posAbs = (posX + 5*(posY+1))-10
   
   -- Verificação de jogadas erradas
   if ((x<50 or x>300) or (y<50 or y>300)) or mat[posAbs] ~= '' then return end  
   
-  if (isPlyr) then mat[posAbs] = 'PL'
-  else mat[posAbs] = 'IA' end
+  if (isPlyr) then mat[posAbs] = 'PL' else mat[posAbs] = 'IA' end
   
   isPlyr = checkClick(isPlyr, mat, posX,posY, posAbs)
   
