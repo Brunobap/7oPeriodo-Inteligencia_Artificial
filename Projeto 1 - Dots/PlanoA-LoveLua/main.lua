@@ -31,19 +31,21 @@ function love.load()
   
   -- Iniciando as variáveis
   isPlyr = false
+  jogadas = 0  
   
-  disponiveis = {}
-  for i = 1,12 do 
-    table.insert(disponiveis, i)
-  end    
+  disponiveis = {}  
+  for i = 1,12 do table.insert(disponiveis, i) end  
   
-  -- Vetor para a representação na tela
   mat = {
-    '.','','.','','.',
-    '','X','','X','',
-    '.','','.','','.',
-    '','X','','X','',
-    '.','','.','','.'
+    '.',  '',   '.',  '',   '.',
+    
+    '',   'X',  '',   'X',  '',
+    
+    '.',  '',   '.',  '',   '.',
+    
+    '',   'X',  '',   'X',  '',
+    
+    '.',  '',   '.',  '',   '.'
   }
 
   -- Iniciar com jogadas random
@@ -53,10 +55,7 @@ function love.load()
   local aux2 = table.remove(disponiveis, math.random(1,11))
   jogadaPC(aux2)
   
-  --arvore = Arvore.new(aux1, aux2)
-  
-  -- Começa o jogo
-  jogadas = 2
+  arvore = Arvore.new(aux1, aux2, table.clone(mat))
 end
 --
 function love.mousepressed(x,y)
@@ -71,7 +70,9 @@ function love.mousepressed(x,y)
   if (isPlyr) then mat[posAbs] = 'PL'
   else mat[posAbs] = 'IA' end
   
-  isPlyr = checkClick(isPlyr,mat,posX,posY,posAbs)
+  isPlyr = checkClick(isPlyr, mat, posX,posY, posAbs)
+  
+  jogadas = jogadas +1
 end
 --
 function love.keypressed(k)
@@ -82,6 +83,7 @@ end
 function love.draw()
   -- Legenda ao lado
   LG.print('PL = Jogador\nIA = Computador',350,50)
+  LG.print('Jogadas restantes: '..(12-jogadas),50,350)
   
   -- Tabuleiro do jogo
   local x,y
