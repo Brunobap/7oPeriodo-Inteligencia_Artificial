@@ -1,4 +1,3 @@
-
 require('objetos')
 require('utilitarias')
 
@@ -55,7 +54,7 @@ function love.load()
   local aux2 = table.remove(disponiveis, math.random(1,11))
   jogadaPC(aux2)
   
-  --arvore = Arvore.new(aux1, aux2)
+  arvore = Arvore.new(aux1, aux2)
 end
 --
 function love.mousepressed(x,y)

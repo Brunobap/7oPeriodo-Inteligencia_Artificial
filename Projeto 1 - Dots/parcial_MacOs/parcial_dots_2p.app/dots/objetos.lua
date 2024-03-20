@@ -1,4 +1,3 @@
-
 require('utilitarias')
 
 Node = {}
@@ -27,8 +26,6 @@ Node.new = function(isPlyr, disponiveis, tabuleiro, usado)
     if (self.tabuleiro[9] == 'PL') then self.minmax = self.minmax -1 else self.minmax = self.minmax +1 end
     if (self.tabuleiro[19] == 'PL') then self.minmax = self.minmax -1 else self.minmax = self.minmax +1 end
     
-    if self.minmax ~= 0 then self.minmax = self.minmax/math.abs(self.minmax) end
-    
   else
     -- Se não, fazer os nós dos filhos, ...
     for i,disp in ipairs(disponiveis) do 
@@ -38,13 +35,10 @@ Node.new = function(isPlyr, disponiveis, tabuleiro, usado)
       end
       
       local novo = Node.new(finalState, auxTable, table.clone(self.tabuleiro), disp)
-      table.insert(self.filhos, novo)
-    end
-    
-    -- E com os nós dos filhos, pegar o minmax
-      -- Se a vez é do jogador procurar o menor valor
-    for i,filho in ipairs(self.filhos) do
-      if (self.isPlyr and self.minmax > filho.minmax) or (not self.isPlyr and self.minmax < filho.minmax) then  self.minmax = filho.minmax end
+      if (self.isPlyr) or (not self.isPlyr and self.minmax <= novo.minmax) then
+        if (self.isPlyr and self.minmax > novo.minmax) or not isPlyr then self.minmax = novo.minmax end
+        table.insert(self.filhos, novo) 
+      end
     end
   end
   
