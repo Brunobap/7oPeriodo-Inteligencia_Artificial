@@ -81,18 +81,31 @@ Arvore.new = function(usado1, usado2)
     if i == usado2 then table.remove(disponiveis, a) break end
   end  
   tabuleiro[usado2*2] = 'PL'
-  table.insert(self[1].filhos, {isPlyr = true, disponiveis = table.clone(disponiveis), filhos = {}, tabuleiro = table.clone(tabuleiro)})
+  table.insert(self[1].filhos, {
+    isPlyr = true, 
+    disponiveis = table.clone(disponiveis),
+    filhos = {}, 
+    tabuleiro = table.clone(tabuleiro), 
+    minmax = 0
+  })
   
   local possibilidades, novo
+  local atual = self[1].filhos[1]
   for i,disp in ipairs(disponiveis) do 
     possibilidades = {}
     for j,pos in ipairs(disponiveis) do
       if disp ~= pos then table.insert(possibilidades, pos) end
     end
-    novo = Node.new(false, table.clone(possibilidades), table.clone(tabuleiro), disp)
-    table.insert(self[1].filhos[1].filhos, novo)
+    novo = Node.new(false, possibilidades, table.clone(tabuleiro), disp)
+    if atual.minmax < novo.minmax or #atual.filhos == 0 then
+      if atual.minmax < novo.minmax then atual.minmax = novo.minmax end
+      table.insert(atual.filhos, novo)         
+    end
   end
   --
+  for i,filho in ipairs(atual.filhos) do
+    if (filho.minmax ~= atual.minmax) then table.remove(atual.filhos,i) end
+  end
   
   return self
 end

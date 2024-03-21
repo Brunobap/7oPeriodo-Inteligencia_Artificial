@@ -77,13 +77,13 @@ function love.mousepressed(x,y)
   -- As 2 primeiras jogadas são random, as próximas vão cortando a árvore
   if 2 < jogadas and jogadas < 12 then
     local temp
+    print(jogadas)
     for i,filho in ipairs(noAtual.filhos) do
-      if filho.usado ~= posAbs then table.remove(noAtual.filhos, i)
-      else temp = filho end
+      --print(posAbs, filho.usado)
+      if filho.usado == posAbs then temp = filho break end
     end
     
-    if noAtual == nil then print('aaaaaaaaaaa')
-    else noAtual = temp end
+    noAtual = temp
     
     if not isPlyr then jogadaPC(noAtual.filhos[1].usado) end
   end
