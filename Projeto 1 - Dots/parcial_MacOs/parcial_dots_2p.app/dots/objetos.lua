@@ -2,9 +2,10 @@ require('utilitarias')
 
 Node = {}
 Node.new = function(isPlyr, disponiveis, tabuleiro, usado)
-  local self = self or {}
+  local self = {}
   
   self.disponiveis = disponiveis 
+  self.usado = usado
   
   usado = (usado*2)
   tabuleiro[usado] = "#"
@@ -35,12 +36,21 @@ Node.new = function(isPlyr, disponiveis, tabuleiro, usado)
       end
       
       local novo = Node.new(finalState, auxTable, table.clone(self.tabuleiro), disp)
-      if (self.isPlyr) or (not self.isPlyr and self.minmax <= novo.minmax) then
-        if (self.isPlyr and self.minmax > novo.minmax) or not isPlyr then self.minmax = novo.minmax end
-        table.insert(self.filhos, novo) 
+      if (self.isPlyr) or (not self.isPlyr and (self.minmax <= novo.minmax or #self.filhos == 0)) then
+        if (self.isPlyr and self.minmax > novo.minmax) or (not self.isPlyr) then self.minmax = novo.minmax end
+        table.insert(self.filhos, novo)         
+      else novo = nil end
+    end
+    
+    if not self.isPlyr then  
+      for i,filho in ipairs(self.filhos) do
+        if (filho.minmax ~= self.minmax) or (self.minmax == filho.minmax and #self.filhos > 1) then table.remove(self.filhos, i) end
       end
     end
   end
+  
+  -- Essas informações não vão ser mais usadas, podem ser eliminadas
+  self.disponiveis, self.tabuleiro = nil, nil
   
   return self
 end

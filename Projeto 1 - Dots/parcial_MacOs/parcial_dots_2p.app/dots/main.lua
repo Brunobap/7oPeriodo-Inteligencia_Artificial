@@ -3,21 +3,18 @@ require('utilitarias')
 
 -- Apelidos
 local LG = love.graphics
-
 -- Matriz principal
 local mat
-
 -- Vetor de disponíveis
 local disponiveis
-
 -- Árvore de possibilidades
 local arvore
-
 -- Flag da vez do jogador
 local isPlyr
-
 -- Número de jogadas (para acompanhar o nível da árvore)
 local jogadas
+-- Ponteiro para a última jogada feita 
+local noAtual
 
 function love.load()
   -- Seed de randoms  
@@ -55,6 +52,10 @@ function love.load()
   jogadaPC(aux2)
   
   arvore = Arvore.new(aux1, aux2)
+  
+  noAtual = arvore[1].filhos[1]
+  
+  jogadaPC(noAtual.filhos[1].usado)
 end
 --
 function love.mousepressed(x,y)
@@ -67,11 +68,25 @@ function love.mousepressed(x,y)
   -- Verificação de jogadas erradas
   if ((x<50 or x>300) or (y<50 or y>300)) or mat[posAbs] ~= '' then return end  
   
-  if (isPlyr) then mat[posAbs] = 'PL' else mat[posAbs] = 'IA' end
+  if isPlyr then mat[posAbs] = 'PL' else mat[posAbs] = 'IA' end
   
   isPlyr = checkClick(isPlyr, mat, posX,posY, posAbs)
+ 
+  jogadas = jogadas +1 
   
-  jogadas = jogadas +1
+  -- As 2 primeiras jogadas são random, as próximas vão cortando a árvore
+  if 2 < jogadas and jogadas < 12 then
+    local temp
+    for i,filho in ipairs(noAtual.filhos) do
+      if filho.usado ~= posAbs then table.remove(noAtual.filhos, i)
+      else temp = filho end
+    end
+    
+    if noAtual == nil then print('aaaaaaaaaaa')
+    else noAtual = temp end
+    
+    if not isPlyr then jogadaPC(noAtual.filhos[1].usado) end
+  end
 end
 --
 function love.keypressed(k)
