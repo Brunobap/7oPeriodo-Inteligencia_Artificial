@@ -21,7 +21,7 @@ function checkClick(isPlyr,mat,x,y,abs)
         return isPlyr
       end      
     -- Borda inferior
-    elseif y == 5 then
+    else
       if mat[abs-5] == 'X' and (mat[abs-6] ~= '' and mat[abs-4] ~= '' and mat[abs-10] ~= '') then
         marcou(isPlyr,mat,abs-5)
         return isPlyr 
@@ -42,7 +42,7 @@ function checkClick(isPlyr,mat,x,y,abs)
       end
       
     -- Linha horizontal do meio
-    elseif y == 3 then
+    else
       if mat[abs-5] == 'X' and mat[abs-10] ~= '' and mat[abs-4] ~= '' and mat[abs-6] ~= '' then 
         marcou(isPlyr,mat,abs-5)
         flag = true

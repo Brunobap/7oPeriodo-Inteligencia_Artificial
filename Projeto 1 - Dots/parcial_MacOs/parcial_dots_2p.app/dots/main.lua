@@ -1,18 +1,20 @@
 require('objetos')
 require('utilitarias')
 
--- Apelido
+-- Apelidos
 local LG = love.graphics
 -- Matriz principal
 local mat
+-- Vetor de disponíveis
+local disponiveis
+-- Árvore de possibilidades
+local arvore
 -- Flag da vez do jogador
 local isPlyr
 -- Número de jogadas (para acompanhar o nível da árvore)
 local jogadas
 -- Ponteiro para a última jogada feita 
 local noAtual
-
-debug = true
 
 function love.load()
   -- Seed de randoms  
@@ -27,7 +29,7 @@ function love.load()
   isPlyr = false
   jogadas = 0  
   
-  local disponiveis = {}  
+  disponiveis = {}  
   for i = 1,12 do table.insert(disponiveis, i) end  
   
   mat = {
@@ -49,7 +51,9 @@ function love.load()
   local aux2 = table.remove(disponiveis, math.random(1,11))
   jogadaPC(aux2)
   
-  noAtual = Arvore.new(aux1, aux2)
+  arvore = Arvore.new(aux1, aux2)
+  
+  noAtual = arvore[1].filhos[1]
   
   jogadaPC(noAtual.filhos[1].usado)
 end
@@ -62,7 +66,7 @@ function love.mousepressed(x,y)
   local posAbs = (posX + 5*(posY+1))-10
   
   -- Verificação de jogadas erradas
-  if ((x<50 or x>300) or (y<50 or y>300)) or mat[posAbs] ~= '' then return end
+  if ((x<50 or x>300) or (y<50 or y>300)) or mat[posAbs] ~= '' then return end  
   
   if isPlyr then mat[posAbs] = 'PL' else mat[posAbs] = 'IA' end
   
@@ -72,10 +76,10 @@ function love.mousepressed(x,y)
   
   -- As 2 primeiras jogadas são random, as próximas vão cortando a árvore
   if 2 < jogadas and jogadas < 12 then
-    posAbs = posAbs / 2
     local temp
-    for i,filho in ipairs(noAtual.filhos) do   
-      print(noAtual.isPlyr, #noAtual.filhos, posAbs, filho.usado)   
+    print(jogadas)
+    for i,filho in ipairs(noAtual.filhos) do
+      --print(posAbs, filho.usado)
       if filho.usado == posAbs then temp = filho break end
     end
     
@@ -100,6 +104,6 @@ function love.draw()
   for i,char in ipairs(mat) do
     x,y = 50+50*((i-1)%5), 50+50*math.floor((i-1)/5)
     LG.rectangle('line',x,y,50,50)
-    LG.printf(char,x,y,50,'center')
+    LG.print(char,x,y)
   end
 end
