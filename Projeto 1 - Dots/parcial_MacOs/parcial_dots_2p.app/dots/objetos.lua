@@ -39,11 +39,13 @@ Node.new = function(isPlyr, disponiveis, tabuleiro, usado)
     if self.isPlyr then
       local temp = {}
       for i,filho in ipairs(self.filhos) do
-        if filho.minmax == self.minmax then table.insert(temp,filho) end
+        if filho.minmax >= 0 then table.insert(temp,filho) end
       end
       self.filhos = temp
     end
   end
+
+  tabuleiro, disponiveis = nil, nil
   
   return self
 end

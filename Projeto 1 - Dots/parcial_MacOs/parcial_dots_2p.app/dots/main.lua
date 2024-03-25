@@ -79,7 +79,6 @@ function love.mousepressed(x,y)
     noAtual = temp
     
     if not isPlyr then 
-      print(noAtual.minmax)
       for i,filho in ipairs(noAtual.filhos) do
         if filho.minmax == noAtual.minmax then jogadaPC(filho.usado) break end
       end      
