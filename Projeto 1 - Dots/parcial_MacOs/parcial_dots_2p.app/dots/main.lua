@@ -12,8 +12,6 @@ local jogadas
 -- Ponteiro para a última jogada feita 
 local noAtual
 
-debug = true
-
 function love.load()
   -- Seed de randoms  
   math.randomseed(os.time())
@@ -21,7 +19,7 @@ function love.load()
   -- Setando a parte gráfica da tela
   LG.setBackgroundColor(1,1,1,1)
   LG.setColor(0,0,0,1)
-  LG.setNewFont(40)
+  LG.setNewFont(35)
   
   -- Iniciando as variáveis
   isPlyr = false
@@ -43,10 +41,10 @@ function love.load()
   }
  
   -- Iniciar com jogadas random
-  local aux1 = table.remove(disponiveis, math.random(1,12))
-  jogadaPC(aux1)
-  
+  local aux1 = table.remove(disponiveis, math.random(1,12))  
   local aux2 = table.remove(disponiveis, math.random(1,11))
+  
+  jogadaPC(aux1)
   jogadaPC(aux2)
   
   noAtual = Arvore.new(aux1, aux2)
@@ -75,18 +73,24 @@ function love.mousepressed(x,y)
     posAbs = posAbs / 2
     local temp
     for i,filho in ipairs(noAtual.filhos) do   
-      print(noAtual.isPlyr, #noAtual.filhos, posAbs, filho.usado)   
       if filho.usado == posAbs then temp = filho break end
     end
     
     noAtual = temp
     
-    if not isPlyr then jogadaPC(noAtual.filhos[1].usado) end
+    if not isPlyr then 
+      print(noAtual.minmax)
+      for i,filho in ipairs(noAtual.filhos) do
+        if filho.minmax == noAtual.minmax then jogadaPC(filho.usado) break end
+      end      
+    end
   end
 end
 --
 function love.keypressed(k)
-  if k == 'r' then love.load()
+  if k == 'r' then
+    noAtual = nil
+    love.load()
   else love.event.quit() end
 end
 --
