@@ -352,13 +352,11 @@ import random
 tabTreino = []
 tabTeste = []
 def separarTabelas(tabIni):
-	treino = []
-	teste = []
-    for col in tabIni:
-		treino.append(col.copy())
-	teste.append([])
+    treino = []
+    for col in tabelaIni: treino.append(col.copy())
 
     tam = len(tabIni[0])/3
+    teste = [[],[],[],[],[],[],[],[],[],[]]
     for i in range(0,int(tam)):
         # A escolha dos testes é aleatória
         rand = random.randrange(0,len(treino[1]))

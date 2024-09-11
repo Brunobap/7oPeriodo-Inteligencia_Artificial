@@ -354,8 +354,7 @@ tabTeste = []
 def separarTabelas(tabIni):
 	treino = []
 	teste = []
-    for col in tabIni:
-		treino.append(col.copy())
+    for col in tabIni: treino.append(col.copy())
 	teste.append([])
 
     tam = len(tabIni[0])/3
