@@ -31,7 +31,7 @@
 # 9. breast-quad (qualitativo nominal): left-up, left-low, right-up, right-low, central.
 # 10. irradiat (qualitativo nominal): yes, no.
 
-# In[1]:
+# In[2]:
 
 
 # Parte 1: ler o arquivo e montar as linhas
@@ -45,7 +45,7 @@ for linha in entrada:
 print("Dados carregados")
 
 # Tabela com tipos de entradas possíveis
-tiposEntr = [
+tiposEntrOriginal = [
     ["no-recurrence-events", 'recurrence-events'],
     ["10-19", "20-29", "30-39", "40-49", "50-59", "60-69", "70-79", "80-89", "90-99"],
     ["lt40", "ge40", "premeno"],
@@ -57,8 +57,10 @@ tiposEntr = [
     ['left_up','left_low','right_up','right_low','central'],
     ['no', 'yes']
 ]
+tiposEntr = tiposEntrOriginal.copy()
 print(f"\nTipos de entrada possíveis por coluna:\n{tiposEntr}")
 
+tiposEntr = tiposEntrOriginal.copy()
 
 tiposAtr = {
     'Class': 'qualitativo nominal',
